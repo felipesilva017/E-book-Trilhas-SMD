@@ -1,22 +1,25 @@
 import { useCallback, useEffect, useRef } from 'react'
 import HTMLFlipBook from 'react-pageflip'
 import narracaoP1 from './assets/narracao_p1.m4a'
-import ChapterPageContent from './components/book/ChapterPageContent'
-import CoverPageContent from './components/book/CoverPageContent'
 import FlipPage from './components/book/FlipPage'
-import NarrationPageContent from './components/book/NarrationPageContent'
+import CoverPage from './components/book/pages/CoverPage'
+import NarrationPage from './components/book/pages/NarrationPage'
+import ContentPage01 from './components/book/pages/ContentPage01'
+import ContentPage02 from './components/book/pages/ContentPage02'
+import ContentPage03 from './components/book/pages/ContentPage03'
 
 const pageSequence = [
-  { pageNumber: 2, type: 'narration' },
-  { pageNumber: 3, type: 'content' },
-  { pageNumber: 4, type: 'narration' },
-  { pageNumber: 5, type: 'content' },
-  { pageNumber: 6, type: 'narration' },
-  { pageNumber: 7, type: 'content' },
+  { key: 'page-01', Component: CoverPage },
+  { key: 'page-02', Component: NarrationPage },
+  { key: 'page-03', Component: ContentPage01 },
+  { key: 'page-04', Component: NarrationPage },
+  { key: 'page-05', Component: ContentPage02 },
+  { key: 'page-06', Component: NarrationPage },
+  { key: 'page-07', Component: ContentPage03 },
 ]
 
 const narrationByPage = {
-  1: narracaoP1,
+  2: narracaoP1,
 }
 
 function App() {
@@ -109,36 +112,28 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen w-full px-3 py-3 sm:px-6 sm:py-6">
+    <main className="h-[100svh] w-full overflow-hidden px-2 py-2 sm:px-4 sm:py-4">
       <section
-        className="mx-auto flex w-full max-w-[1080px] items-center justify-center rounded-[20px] bg-[linear-gradient(140deg,#f8f1bc_0%,#f5f2d5_40%,#e4e886_100%)] p-3 shadow-[0_22px_60px_rgba(50,42,18,0.2),inset_0_0_0_2px_rgba(129,106,32,0.28)] sm:p-7 lg:rounded-[28px]"
+        className="mx-auto flex h-full w-full max-w-none items-center justify-center rounded-[20px] bg-[linear-gradient(140deg,#f8f1bc_0%,#f5f2d5_40%,#e4e886_100%)] p-2 shadow-[0_22px_60px_rgba(50,42,18,0.2),inset_0_0_0_2px_rgba(129,106,32,0.28)] sm:p-4 lg:rounded-[28px]"
         aria-label="Visualizacao do ebook"
       >
         <HTMLFlipBook
           ref={flipBookRef}
-          width={540}
-          height={760}
+          width={720}
+          height={1024}
           size="stretch"
-          minWidth={300}
-          maxWidth={560}
-          minHeight={420}
-          maxHeight={760}
+          minWidth={420}
+          maxWidth={960}
+          minHeight={600}
+          maxHeight={1360}
           maxShadowOpacity={0.32}
           showCover={true}
           mobileScrollSupport={true}
           onFlip={handleFlip}
         >
-          <FlipPage>
-            <CoverPageContent />
-          </FlipPage>
-
-          {pageSequence.map(({ pageNumber, type }) => (
-            <FlipPage key={pageNumber}>
-              {type === 'narration' ? (
-                <NarrationPageContent pageNumber={pageNumber} />
-              ) : (
-                <ChapterPageContent pageNumber={pageNumber} />
-              )}
+          {pageSequence.map(({ key, Component }) => (
+            <FlipPage key={key}>
+              <Component />
             </FlipPage>
           ))}
         </HTMLFlipBook>
